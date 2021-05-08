@@ -325,15 +325,15 @@ public class GameManager : MonoBehaviour {
     public void Nivel1()
     {
         nivel1.minijuego = false;
-        if (nivel1.terminado || primeravez == 1)
-            SceneManager.LoadScene("Nivel1");
-        else
-        {
-            SceneManager.LoadScene("Cinematica1");
-            Invoke("Cinematica1",85);
-            primeravez = 1;
-        }
-
+        /* if (nivel1.terminado || primeravez == 1)
+             SceneManager.LoadScene("Nivel1");
+         else
+         {
+             SceneManager.LoadScene("Cinematica1");
+             Invoke("Cinematica1",85);
+             primeravez = 1;
+         }*/
+        SceneManager.LoadScene("Nivel1");
         actual = "Nivel1";
         bombillas = 4;
         carretes = 3;
