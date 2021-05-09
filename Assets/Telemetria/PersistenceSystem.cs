@@ -11,6 +11,10 @@ public class PersistenceSystem
 
     private StreamWriter sw = null;
 
+    // IDs de sesion
+    string machineID;
+    string sessionID;
+
     private bool OpenWriteFile (string file_path) //Opens output file (writting) if it isn't already openned
     {
         if (!File.Exists(file_path))
@@ -22,9 +26,14 @@ public class PersistenceSystem
         return false;
     }
 
-    public bool Init ()
+    public bool Init (string machineID, string sessionID)
     {
-        if(OpenWriteFile(FILEPATH))
+        this.machineID = machineID;
+        this.sessionID = sessionID;
+
+        // TODO: Cambiar el filepath para que cree archivo con nombre nuevo en base a las IDs
+
+        if (OpenWriteFile(FILEPATH))
         {
             sw.Write("{\n");
             return true;

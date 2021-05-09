@@ -63,7 +63,7 @@ public class TelemetrySystem{
         eventQueue = new Queue<TelemetryEvent>();
 
         persistence = new PersistenceSystem();
-        persistence.Init();
+        persistence.Init(machineID, sessionID);
     }
 
     public static TelemetrySystem Instance
