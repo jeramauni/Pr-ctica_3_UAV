@@ -7,11 +7,11 @@ public class PersistenceSystem
 {
     #region FileManager (Opening and closing I/O)
 
-    static string FILEPATH = @".\Telemetria\session_id.txt";
+    static string FILEPATH = @".\Telemetria\";
 
     private StreamWriter sw = null;
 
-    // IDs de sesion
+    // IDs
     string machineID;
     string sessionID;
 
@@ -26,15 +26,16 @@ public class PersistenceSystem
         return false;
     }
 
-    public bool Init (string machineID, string sessionID)
+    public bool Init (string machineID_, string sessionID_)
     {
-        this.machineID = machineID;
-        this.sessionID = sessionID;
+        machineID = machineID_;
+        sessionID = sessionID_;
 
-        // TODO: Cambiar el filepath para que cree archivo con nombre nuevo en base a las IDs
 
-        if (OpenWriteFile(FILEPATH))
+        if (OpenWriteFile(FILEPATH + sessionID + ".txt"))
         {
+            sw.WriteLine("\"Session ID\": " + '\"' + sessionID + '\"');
+            sw.WriteLine("\"Machine ID\": " + '\"' + machineID + '\"');
             sw.Write("{\n");
             return true;
         }
