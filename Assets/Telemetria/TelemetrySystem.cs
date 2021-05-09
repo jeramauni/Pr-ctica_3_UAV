@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 //using UnityEngine.SystemInfo.deviceUniqueIdentifier;
 
@@ -54,6 +55,8 @@ public class TelemetrySystem{
         timeElapsed = 0.0f;
         saveFrequency = 30000; // DEFAULT: Actualizamos datos cada 30 segundos
         encoding = SerializeType.JSON;
+
+        threadIsStopped = true;
     }
 
     public static TelemetrySystem Instance { get { return Nested.instance; } }
@@ -85,21 +88,38 @@ public class TelemetrySystem{
     private readonly string sessionID;
     private readonly string machineID;
 
+    // Hilo para serialización y guardado
+    Thread telemetryThread;
+    bool threadIsStopped;
+
     public void Update () {
         timeElapsed += Time.deltaTime * 1000;
-        if(timeElapsed > saveFrequency)
+        if(timeElapsed > saveFrequency && threadIsStopped)
         {
-            while (eventQueue.Count > 0)
-            {
-                persistence.toJson(eventQueue.Peek());
-                eventQueue.Dequeue();
-            }
-
-            // persistence.GUARDA_EL_ARCHIVO
-
-            timeElapsed = 0;
+            telemetryThread = new Thread(SerializeAndSave);
         }
 	}
+
+
+    private void SerializeAndSave()
+    {
+        threadIsStopped = false;
+        while (eventQueue.Count > 0)
+        {
+            persistence.toJson(eventQueue.Peek());
+            eventQueue.Dequeue();
+        }
+
+        // persistence.GUARDA_EL_ARCHIVO
+
+        timeElapsed = 0;
+        threadIsStopped = true;
+    }
+
+    public bool telemetryThreadFinished()
+    {
+        return threadIsStopped;
+    }
 
     /// <summary>
     /// Fuerza al sistema a serializar y guardar todos los eventos en la cola
