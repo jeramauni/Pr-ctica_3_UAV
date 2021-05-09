@@ -16,18 +16,26 @@ public class PersistenceSystem
         if (!File.Exists(file_path))
         {
             sw = File.CreateText(file_path);
-            return true;
+
+            if(File.Exists(file_path)) return true;
         }
         return false;
     }
 
     public bool Init ()
     {
-        return OpenWriteFile(FILEPATH);
+        if(OpenWriteFile(FILEPATH))
+        {
+            sw.Write("{\n");
+            return true;
+        }
+        return false;
     }
 
     public bool ShutDown()
     {
+        sw.Write("}");
+
         sw.Close();
         return true;
     }
