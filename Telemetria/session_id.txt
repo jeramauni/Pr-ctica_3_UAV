@@ -1,9 +1,0 @@
-{
-"Inicio sesion": "lvl 0 5/9/2021 4:13:17 PM",
-"Inicio nivel": "lvl 1 5/9/2021 4:13:18 PM",
-"Coleccionable recogido": "lvl 0 5/9/2021 4:13:25 PM",
-"Flash recogido": "lvl 1 5/9/2021 4:13:31 PM",
-"Coleccionable recogido": "lvl 0 5/9/2021 4:13:39 PM",
-"Pausa": "lvl 1 5/9/2021 4:13:40 PM",
-"Fin sesion": "lvl 0 5/9/2021 4:13:41 PM",
-}

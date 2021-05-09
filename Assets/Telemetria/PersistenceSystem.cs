@@ -17,6 +17,9 @@ public class PersistenceSystem
 
     private bool OpenWriteFile (string file_path) //Opens output file (writting) if it isn't already openned
     {
+        if(!Directory.Exists(@".\Telemetria"))
+            Directory.CreateDirectory(@".\Telemetria");
+        
         if (!File.Exists(file_path))
         {
             sw = File.CreateText(file_path);
@@ -34,8 +37,10 @@ public class PersistenceSystem
 
         if (OpenWriteFile(FILEPATH + sessionID + ".txt"))
         {
+            sw.Write("{\n");
             sw.WriteLine("\"Session ID\": " + '\"' + sessionID + '\"');
             sw.WriteLine("\"Machine ID\": " + '\"' + machineID + '\"');
+            sw.Write("}\n");
             sw.Write("{\n");
             return true;
         }
