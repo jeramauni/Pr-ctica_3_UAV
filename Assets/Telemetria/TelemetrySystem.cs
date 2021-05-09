@@ -38,6 +38,10 @@ public class TelemetrySystem : MonoBehaviour{
 		//if tiempo > x
   //          while lista no vacía
   //                  SERIALIZAR(lista pop evento.toJSON)
+
+
+        switch(encoding)
+
 	}
 
     // SERIALIZAR

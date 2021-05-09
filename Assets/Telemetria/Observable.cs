@@ -30,7 +30,9 @@ public enum TipoEvento
 public struct Evento
 {
     public TipoEvento type;
-    public string data;
+    public float time;
+
+    public void setNull() { time = -1.0f; }
 }
 
 #endregion
