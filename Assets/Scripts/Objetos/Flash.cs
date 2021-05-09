@@ -82,9 +82,9 @@ public class Flash : MonoBehaviour
                 {
                     FamosoEspaldas();
                 }
-                else if (ConoFoto.GetComponent<Raycast>().LeVeo() && ConoFoto.GetComponent<Raycast>().FotoAQuien().CompareTag("Guardia"){
+                else if (ConoFoto.GetComponent<Raycast>().LeVeo() && ConoFoto.GetComponent<Raycast>().FotoAQuien().CompareTag("Guardia"))
                     TelemetrySystem.Instance.addEvent("FotoGuardia", GameManager.instance.getLevelNumber());
-                }
+                
 
                 else    //Ha fallado la foto
                 {
