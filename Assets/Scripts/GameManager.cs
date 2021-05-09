@@ -64,21 +64,11 @@ class Nivel
 public class GameManager : MonoBehaviour {
 
     #region TELEMETRIA
-    TelemetrySystem telemetria = TelemetrySystem.Instance;
+    TelemetrySystem telemetria;
 
     public int getLevelNumber()
     {
-        switch (actual)
-        {
-            case "nivel1":
-                return 1;
-            case "nivel2":
-                return 2;
-            case "nivel3":
-                return 3;
-            default:
-                return 0;
-        }
+        return int.Parse(actual[actual.Length - 1].ToString());
     }
 
     void Update()
@@ -88,12 +78,7 @@ public class GameManager : MonoBehaviour {
 
     void OnApplicationQuit()
     {
-        if (!telemetria.telemetryThreadFinished())
-        {
-            Thread.CurrentThread.Join();
-        }
-        telemetria.addEvent("FinSesion");
-        telemetria.ForcedUpdate();
+        telemetria.shutdown();
     }
 
     #endregion
@@ -131,7 +116,9 @@ public class GameManager : MonoBehaviour {
         }
 		else Destroy(this.gameObject);
 
-		nivel1 = new Nivel ("nivel1");
+        telemetria = TelemetrySystem.Instance;
+
+        nivel1 = new Nivel ("nivel1");
         nivel2 = new Nivel("nivel2");
         nivel3 = new Nivel("nivel3");
         actual = SceneManager.GetActiveScene().name;
@@ -576,7 +563,7 @@ public class GameManager : MonoBehaviour {
 
     public void Continua()
     {
-        telemetria.addEvent("FinNivel", getLevelNumber());
+        if(getLevelNumber() > 0 && getLevelNumber() < 4) telemetria.addEvent("FinNivel", getLevelNumber());
         if (actual == "N3Puntuacion3")
         {
             SceneManager.LoadScene("Cinematica2");

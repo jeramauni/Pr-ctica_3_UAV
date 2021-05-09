@@ -46,6 +46,8 @@ public class TelemetrySystem{
 
     #region SINGLETON
 
+    private static TelemetrySystem instance = null;
+
     private TelemetrySystem()
     {
         DateTime act = DateTime.UtcNow;
@@ -57,19 +59,23 @@ public class TelemetrySystem{
         encoding = SerializeType.JSON;
 
         threadIsStopped = true;
+
+        eventQueue = new Queue<TelemetryEvent>();
+
+        persistence = new PersistenceSystem();
+        persistence.Init();
     }
 
-    public static TelemetrySystem Instance { get { return Nested.instance; } }
-
-    private class Nested
+    public static TelemetrySystem Instance
     {
-        // Explicit static constructor to tell C# compiler
-        // not to mark type as beforefieldinit
-        static Nested()
+        get
         {
+            if (instance == null)
+            {
+                instance = new TelemetrySystem();
+            }
+            return instance;
         }
-
-        internal static readonly TelemetrySystem instance = new TelemetrySystem();
     }
     #endregion
 
@@ -92,11 +98,24 @@ public class TelemetrySystem{
     Thread telemetryThread;
     bool threadIsStopped;
 
+
+    public void shutdown()
+    {
+        if (!threadIsStopped)
+        {
+            telemetryThread.Join();
+        }
+        addEvent("FinSesion");
+        ForcedUpdate();
+        persistence.ShutDown();
+    }
+
     public void Update () {
         timeElapsed += Time.deltaTime * 1000;
         if(timeElapsed > saveFrequency && threadIsStopped)
         {
             telemetryThread = new Thread(SerializeAndSave);
+            telemetryThread.Start();
         }
 	}
 
@@ -109,8 +128,6 @@ public class TelemetrySystem{
             persistence.toJson(eventQueue.Peek());
             eventQueue.Dequeue();
         }
-
-        // persistence.GUARDA_EL_ARCHIVO
 
         timeElapsed = 0;
         threadIsStopped = true;
@@ -132,8 +149,6 @@ public class TelemetrySystem{
             persistence.toJson(eventQueue.Peek());
             eventQueue.Dequeue();
         }
-
-        // persistence.GUARDA_EL_ARCHIVO
 
         timeElapsed = 0;
     }
