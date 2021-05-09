@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Video;
@@ -84,6 +85,17 @@ public class GameManager : MonoBehaviour {
     {
         telemetria.Update();
     }
+
+    void OnApplicationQuit()
+    {
+        if (!telemetria.telemetryThreadFinished())
+        {
+            Thread.CurrentThread.Join();
+        }
+        telemetria.addEvent("FinSesion");
+        telemetria.ForcedUpdate();
+    }
+
     #endregion
 
     Nivel nivel1;
@@ -128,12 +140,6 @@ public class GameManager : MonoBehaviour {
         primeravez = 0;
 
         telemetria.addEvent("InicioSesion");
-    }
-
-    void OnApplicationQuit()
-    {
-        telemetria.addEvent("FinSesion");
-        telemetria.ForcedUpdate();
     }
 
     public int Bombillas()
