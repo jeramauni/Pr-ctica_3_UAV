@@ -61,7 +61,32 @@ class Nivel
 }
 
 public class GameManager : MonoBehaviour {
-	Nivel nivel1;
+
+    #region TELEMETRIA
+    TelemetrySystem telemetria = TelemetrySystem.Instance;
+
+    public int getLevelNumber()
+    {
+        switch (actual)
+        {
+            case "nivel1":
+                return 1;
+            case "nivel2":
+                return 2;
+            case "nivel3":
+                return 3;
+            default:
+                return 0;
+        }
+    }
+
+    void Update()
+    {
+        telemetria.Update();
+    }
+    #endregion
+
+    Nivel nivel1;
     Nivel nivel2;
     Nivel nivel3;
     public int bombillas, carretes, loot,primeravez; //Las bombillas se usan para stunnear y los carretes para las fotos
@@ -101,7 +126,14 @@ public class GameManager : MonoBehaviour {
         Partida();
         crono = GameObject.FindWithTag("Crono");
         primeravez = 0;
-        
+
+        telemetria.addEvent("InicioSesion");
+    }
+
+    void OnApplicationQuit()
+    {
+        telemetria.addEvent("FinSesion");
+        telemetria.ForcedUpdate();
     }
 
     public int Bombillas()
@@ -128,12 +160,14 @@ public class GameManager : MonoBehaviour {
 	public void PickBombilla ()
 	{
 		bombillas++;
-	}
+        telemetria.addEvent("FlashRecogida", getLevelNumber());
+    }
 
 	public void PickCarrete ()
 	{
-		carretes++;
-	}
+        carretes++;
+        telemetria.addEvent("FotoRecogida", getLevelNumber());
+    }
 
 	// Aumenta la puntuación en una cantidad determinada y guarda de dónde viene la puntuación
 	public void SumaPuntos(int cantidad, string motivo)
@@ -340,6 +374,8 @@ public class GameManager : MonoBehaviour {
         loot = 0;
         carreteEspecial = 1;
         nivel1.puntos = 0;
+
+        telemetria.addEvent("InicioNivel", getLevelNumber());
     }
     void Cinematica1()
     {
@@ -356,6 +392,8 @@ public class GameManager : MonoBehaviour {
         loot = 0;
         carreteEspecial = 1;
         nivel2.puntos = 0;
+
+        telemetria.addEvent("InicioNivel", getLevelNumber());
     }
     public void Nivel3()
     {
@@ -367,6 +405,8 @@ public class GameManager : MonoBehaviour {
         loot = 0;
         carreteEspecial = 1;
         nivel3.puntos = 0;
+
+        telemetria.addEvent("InicioNivel", getLevelNumber());
     }
 
     public void Pierde()
@@ -530,6 +570,7 @@ public class GameManager : MonoBehaviour {
 
     public void Continua()
     {
+        telemetria.addEvent("FinNivel", getLevelNumber());
         if (actual == "N3Puntuacion3")
         {
             SceneManager.LoadScene("Cinematica2");
@@ -552,8 +593,9 @@ public class GameManager : MonoBehaviour {
     public void Reintentar()
     {
 
+        telemetria.addEvent("Reinicio", getLevelNumber());
 
-         if (actual == "Nivel1")
+        if (actual == "Nivel1")
             Nivel1();
         else if (actual == "Nivel2")
             Nivel2();

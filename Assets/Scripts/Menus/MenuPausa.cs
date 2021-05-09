@@ -36,7 +36,8 @@ public class MenuPausa : MonoBehaviour {
 		
 	public void Resume ()
 	{
-        GameManager.instance.SetPuedeFlash(false);
+		TelemetrySystem.Instance.addEvent("Pausa", GameManager.instance.getLevelNumber());
+		GameManager.instance.SetPuedeFlash(false);
 		pauseMenuUI.SetActive (false);
 		// timeScale modifica la velocidad a la que pasa el tiempo dentro del juego (va de 0 a 1)
 		Time.timeScale = 1f;
@@ -46,6 +47,7 @@ public class MenuPausa : MonoBehaviour {
 
 	void Pause ()
 	{
+		TelemetrySystem.Instance.addEvent("Pausa", GameManager.instance.getLevelNumber());
 		pauseMenuUI.SetActive (true);
 		Time.timeScale = 0f; 
 		GameManager.instance.SetPause (true);
@@ -58,7 +60,8 @@ public class MenuPausa : MonoBehaviour {
 
 	public void GoToMenu ()
 	{
-        Time.timeScale = 1f;
+		TelemetrySystem.Instance.addEvent("AbandonoNivel", GameManager.instance.getLevelNumber());
+		Time.timeScale = 1f;
         GameManager.instance.GoToMenu();
 	}
 		
