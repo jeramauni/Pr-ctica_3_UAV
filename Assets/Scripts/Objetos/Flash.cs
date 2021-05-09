@@ -74,7 +74,7 @@ public class Flash : MonoBehaviour
                 {
                     FamosoEspaldas();
                 }
-                else if (ConoFoto.GetComponent<Raycast>().LeVeo() &&  ConoFoto.GetComponent<Raycast>().FotoAQuien().CompareTag("Arnold") && ConoFoto.GetComponent<Raycast>().FotoAQuien().GetComponent<Arnold>().IsFace())
+                else if (ConoFoto.GetComponent<Raycast>().LeVeo() && ConoFoto.GetComponent<Raycast>().FotoAQuien().CompareTag("Arnold") && ConoFoto.GetComponent<Raycast>().FotoAQuien().GetComponent<Arnold>().IsFace())
                 {
                     FamosoFrente();
                 }
@@ -82,6 +82,10 @@ public class Flash : MonoBehaviour
                 {
                     FamosoEspaldas();
                 }
+                else if (ConoFoto.GetComponent<Raycast>().LeVeo() && ConoFoto.GetComponent<Raycast>().FotoAQuien().CompareTag("Guardia"){
+                    TelemetrySystem.Instance.addEvent("FotoGuardia", GameManager.instance.getLevelNumber());
+                }
+
                 else    //Ha fallado la foto
                 {
                     //Sonido de error
@@ -90,6 +94,7 @@ public class Flash : MonoBehaviour
                     fotoAudio.Play();
                 }
 
+                TelemetrySystem.Instance.addEvent("FotoUso", GameManager.instance.getLevelNumber());
                 GameManager.instance.carretes--;
                 //sonido
                 camAudio.clip = cameraSound;
@@ -102,7 +107,8 @@ public class Flash : MonoBehaviour
                 if (ConoFlash.GetComponent<Raycast>().LeVeo() && ConoFlash.GetComponent<Raycast>().Frente())//Si esta de frente y dentro llama a stunn
                     ConoFlash.GetComponent<Raycast>().Stunn();
 
-				GameManager.instance.bombillas--;
+                TelemetrySystem.Instance.addEvent("FlashUso", GameManager.instance.getLevelNumber());
+                GameManager.instance.bombillas--;
                 //sonido
                 camAudio.clip = flashSound;
                 camAudio.volume = 0.25f;
